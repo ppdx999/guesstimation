@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "html/template"
   "net/http"
 )
 
@@ -19,7 +20,11 @@ func newRouter() *http.ServeMux {
 }
 
 func hander(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprint(w, "Hello World")
+  t := template.Must(template.ParseFiles("templates/layout.html", "templates/index.html"))
+  err := t.Execute(w, "Hello")
+  if err != nil {
+    fmt.Fprint(w, err)
+  }
 }
 
 func WildcardHandler(w http.ResponseWriter, r *http.Request) {
