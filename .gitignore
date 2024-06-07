@@ -22,3 +22,6 @@ go.work
 
 # db management commands
 db/migr-*
+
+frontend/elm-stuff
+frontend/public/elm.js
