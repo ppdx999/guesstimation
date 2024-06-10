@@ -5,10 +5,10 @@ codeuri = "/home/fujis/workspace/guesstimation/backend/hello-world"
 runtime = "provided.al2023"
 architecture = "x86_64"
 handler = "bootstrap"
-source_hash = "c1bb91ffc8b38b123fa17696248e66430e9f2734be889c70ca39613cc7882e3c"
+source_hash = "7eec13c9b3cc2d92f6c0562285210c50b49f6346ee38f8db9b236efa6604f3f0"
 manifest_hash = ""
 packagetype = "Zip"
-functions = ["HelloWorldFunction"]
+functions = ["MainFunction"]
 
 [function_build_definitions.049e94b5-a1a6-47ab-ac47-22f973b2da64.metadata]
 BuildMethod = "go1.x"

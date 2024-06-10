@@ -15,23 +15,23 @@ Globals:
   Api:
     TracingEnabled: true
 Resources:
-  HelloWorldFunction:
+  MainFunction:
     Type: AWS::Serverless::Function
     Metadata:
       BuildMethod: go1.x
-      SamResourceId: HelloWorldFunction
+      SamResourceId: MainFunction
     Properties:
-      CodeUri: HelloWorldFunction
+      CodeUri: MainFunction
       Handler: bootstrap
       Runtime: provided.al2023
       Architectures:
       - x86_64
       Events:
-        CatchAll:
+        Api:
           Type: Api
           Properties:
-            Path: /hello
-            Method: GET
+            Path: /{proxy+}
+            Method: ANY
       Environment:
         Variables:
           PARAM1: VALUE
@@ -49,19 +49,19 @@ Resources:
         Ref: ApplicationResourceGroup
       AutoConfigurationEnabled: 'true'
 Outputs:
-  HelloWorldAPI:
-    Description: API Gateway endpoint URL for Prod environment for First Function
+  MainAPI:
+    Description: API Gateway endpoint URL for Prod environment
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/
-  HelloWorldFunction:
-    Description: First Lambda Function ARN
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+  MainFunction:
+    Description: Main Lambda Function ARN
     Value:
       Fn::GetAtt:
-      - HelloWorldFunction
+      - MainFunction
       - Arn
-  HelloWorldFunctionIamRole:
-    Description: Implicit IAM Role created for Hello World function
+  MainFunctionIamRole:
+    Description: Implicit IAM Role created for Main function
     Value:
       Fn::GetAtt:
-      - HelloWorldFunctionRole
+      - MainFunctionRole
       - Arn
