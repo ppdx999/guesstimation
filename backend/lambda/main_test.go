@@ -1,59 +1,40 @@
 package main
 
 import (
+	"context"
+	"net/http"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
 )
 
 func TestHandler(t *testing.T) {
-	testCases := []struct {
-		name          string
-		request       events.APIGatewayProxyRequest
-		expectedBody  string
-		expectedError error
+	tests := []struct {
+		path             string
+		expectedStatus   int
+		expectedResponse string
 	}{
-		{
-			// mock a request with an empty SourceIP
-			name: "empty IP",
-			request: events.APIGatewayProxyRequest{
-				RequestContext: events.APIGatewayProxyRequestContext{
-					Identity: events.APIGatewayRequestIdentity{
-						SourceIP: "",
-					},
-				},
-			},
-			expectedBody:  "Hello, world!\n",
-			expectedError: nil,
-		},
-		{
-			// mock a request with a localhost SourceIP
-			name: "localhost IP",
-			request: events.APIGatewayProxyRequest{
-				RequestContext: events.APIGatewayProxyRequestContext{
-					Identity: events.APIGatewayRequestIdentity{
-						SourceIP: "127.0.0.1",
-					},
-				},
-			},
-			expectedBody:  "Hello, 127.0.0.1!\n",
-			expectedError: nil,
-		},
+		{path: "/hello", expectedStatus: http.StatusOK, expectedResponse: "Hello, World!"},
+		{path: "/path1", expectedStatus: http.StatusOK, expectedResponse: "Response from /path1"},
+		{path: "/path2", expectedStatus: http.StatusOK, expectedResponse: "Response from /path2"},
+		{path: "/unknown", expectedStatus: http.StatusNotFound, expectedResponse: "Not Found"},
 	}
 
-	for _, testCase := range testCases {
-		t.Run(testCase.name, func(t *testing.T) {
-			response, err := handler(testCase.request)
-			if err != testCase.expectedError {
-				t.Errorf("Expected error %v, but got %v", testCase.expectedError, err)
+	for _, tt := range tests {
+		t.Run(tt.path, func(t *testing.T) {
+			request := events.APIGatewayProxyRequest{Path: tt.path}
+			response, err := handler(context.Background(), request)
+
+			if err != nil {
+				t.Fatalf("handler returned an error: %v", err)
 			}
 
-			if response.Body != testCase.expectedBody {
-				t.Errorf("Expected response %v, but got %v", testCase.expectedBody, response.Body)
+			if response.StatusCode != tt.expectedStatus {
+				t.Errorf("expected status %d, got %d", tt.expectedStatus, response.StatusCode)
 			}
 
-			if response.StatusCode != 200 {
-				t.Errorf("Expected status code 200, but got %v", response.StatusCode)
+			if response.Body != tt.expectedResponse {
+				t.Errorf("expected body %q, got %q", tt.expectedResponse, response.Body)
 			}
 		})
 	}
