@@ -25,3 +25,6 @@ db/migr-*
 
 frontend/elm-stuff
 frontend/public/elm.js
+
+# aws-sam
+backend/.aws-sam
