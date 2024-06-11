@@ -2,6 +2,7 @@ import { useState } from "react"
 import reactLogo from "./assets/react.svg"
 import viteLogo from "/vite.svg"
 import { apiUrl } from "./config"
+import TestInput from "@/components/TestInput"
 import "./App.css"
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         </a>
       </div>
       <h1>Vite + React / {apiUrl}</h1>
+      <TestInput />
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
